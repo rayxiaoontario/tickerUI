@@ -25,11 +25,14 @@ export class PickerComponent implements OnInit {
     private _jsonURL = 'http://localhost:8080/my-stocks.json';
     disabled = false;
 
+    service:TickerService ;
+
     constructor(service :TickerService,protected sanitizer: DomSanitizer,protected http: HttpClient)
     {
         this.stocks = service.getStocks2();
         this.dataSource = this.stocks;
         console.log(this.dataSource);
+        this.service = service;
     }
 
     ngOnInit()
@@ -83,6 +86,7 @@ export class PickerComponent implements OnInit {
         console.log("followed ticker:"+t.id);
         t.checked=true;
         this.onSave();
+        this.service.flagTicker(ticker.id);
     }
 
     onReviewed(ticker:any)

@@ -26,27 +26,6 @@
 <b> make sure run http-server on localserver folder to</b>
 <mat-divider  ></mat-divider>
 
-<!--div> 
-    <mat-list role="list">
-
-        <mat-list-item role="listitem" *ngFor="let ticker of stocks">
-            <a (click)="goToLink(ticker)">{{ticker.id}}</a>
-            <input
-                type="checkbox"
-                [checked]="ticker.checked"
-                (change)="onFollow(ticker)"/>
-            <input
-                type="checkbox"
-                [checked]="ticker.opened"
-                (change)="onReviewed(ticker)"/>
-        </mat-list-item>
-    </mat-list>
-    <button (click)="onRetrieve()">retrieve</button>
-    <a download="my-stocks.json" [href]="dataUri">
-        <button>backup</button>
-      </a>
- </div-->
-
  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   
