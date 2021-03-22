@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { stringify } from 'querystring';
-import { TickerService } from '../ticker.service';
+import { TickerService } from  '../services/ticker.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
+import { ITickerOnPanel } from '../models/ticker.model';
 
 @Component ({
     templateUrl: './picker.html',
@@ -13,7 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class PickerComponent implements OnInit {
 
-    stocks :any ;
+    stocks :Array<ITickerOnPanel> ;
     idx:number;
 
     displayedColumns: string[] = ['name', 'reviewed', 'opened'];
@@ -29,7 +30,7 @@ export class PickerComponent implements OnInit {
 
     constructor(service :TickerService,protected sanitizer: DomSanitizer,protected http: HttpClient)
     {
-        this.stocks = service.getStocks2();
+        this.stocks = service.loadStockOnPannel();
         this.dataSource = this.stocks;
         console.log(this.dataSource);
         this.service = service;

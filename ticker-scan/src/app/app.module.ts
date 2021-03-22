@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PickerComponent } from './tickerPicker/picker.component';
-import { TickerService } from './ticker.service';
+import { PickerComponent } from './ticker-picker-component/picker.component';
+import { TickerService } from './services/ticker.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule,HttpClient,HttpHandler } from '@angular/common/http';
 import {MatButtonModule} from '@angular/material/button';
