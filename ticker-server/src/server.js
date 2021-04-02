@@ -5,11 +5,13 @@ const app = express();
 var cors = require('cors');
 app.use(cors());
 
-// install express , body-parser , mongodb ,
+// install express , body-parser , mongodb , cors 
 //Here we are configuring express to use body-parser as middle-ware.
 // test get: curl http://localhost:3000/tickers
 // test post : curl -d '{"SSID":"DOCS-ss"}' -H "Content-Type: application/json" -X POST http://localhost:3000/tickers?param=we 
-
+// to run :
+// 1. startup mongodb : from folder /usr/local/etc> , run command  "mongod --config /usr/local/etc/mongod.conf"
+// 2  start app : from folder : /Users/rayxiao/code/angular/tickerUI/ticker-server/src> run command "node server.js"
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -40,7 +42,7 @@ app.get('/tickers',function(req,res) {
     client.connect().then((client)=>{
         var db = client.db('tickerdb')
         db.collection('tickers').deleteMany({});
-        db.collection('tickers').insert(tickers);
+       // db.collection('tickers').insertMany(tickers);
         res.send("done");
         });
     })

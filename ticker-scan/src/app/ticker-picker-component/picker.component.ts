@@ -47,8 +47,13 @@ export class PickerComponent implements OnInit {
         this.service.loadPanelStocks().subscribe(data => {
             console.log("...loaded....");
             this.stocks = data;
-            data.forEach(d=>{ this.stocks.push(d)});
+            data.forEach(d=>{ 
+                 this.stocks.push({ "symbol": d.symbol, 
+                "opened": d.opened,
+                 "checked" :d.checked})
+            });
             this.dataSource = this.stocks;
+            this.showStocks();
         });
     }
 
