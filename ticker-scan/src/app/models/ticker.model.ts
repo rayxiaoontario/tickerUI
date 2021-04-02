@@ -1,7 +1,7 @@
 
 
 export interface ITickerOnPanel {
-    id : String ;
+    symbol : String ;
     checked : Boolean ;
     opened : Boolean ;
 }

@@ -26,7 +26,8 @@ import {DatePipe} from '@angular/common';
     MatDividerModule,
     MatListModule,
     MatTableModule,
-    HttpClientModule
+    HttpClientModule,
+    HttpClientModule,
   ],
   providers: [
     TickerService,HttpClient,DatePipe
