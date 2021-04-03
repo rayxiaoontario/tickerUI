@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import { ITickerOnPanel } from '../models/ticker.model';
 import { HttpClientModule } from '@angular/common/http';
-
+import { SelectedTickerPipe } from '../pipe/SelectedTickerPipe';
 
 @Component ({
     templateUrl: './picker.html',
@@ -17,9 +17,10 @@ import { HttpClientModule } from '@angular/common/http';
 export class PickerComponent implements OnInit {
 
     stocks :ITickerOnPanel[] ;
+    selectedTicker: ITickerOnPanel;
     idx:number;
 
-    displayedColumns: string[] = ['name', 'reviewed', 'opened'];
+    displayedColumns: string[] = ['Symbol'];
     dataSource :any;
 
     checked = false;
@@ -44,8 +45,8 @@ export class PickerComponent implements OnInit {
 
     refresh()
     {
+        console.log("refreshing..");
         this.service.loadPanelStocks().subscribe(data => {
-            console.log("...loaded....",data.length);
             this.stocks =[];
             data.forEach(d=>{ 
                 if (d!=undefined) {
@@ -54,22 +55,20 @@ export class PickerComponent implements OnInit {
                  "checked" :d.checked})
                 }
             });
-            this.dataSource = this.stocks;
-            this.showStocks();
+            this.dataSource = this.stocks ;
         });
     }
 
-    goToLink(ticker: any){
-        ticker.opened=true;
-        var url ="https://www.google.com/search?q="+ticker.symbol+"+stock";
-        console.log(url);
-        window.open(url, "_ttblank");
-        this.onReviewed(ticker);
+    goToLink(ticker: ITickerOnPanel){
+        this.openLink(ticker);
+        ticker.opened = true;
+        this.updateStatus(ticker);
     }
     
      onFollow(ticker:any)
     {
-        console.log("ticker=>"+ticker);
+        console.log("followed=>"+ticker);
+
         if (ticker!=undefined) {
             var t= this.stocks.find(s=>s.symbol===ticker.symbol);
             console.log("followed ticker:"+t.symbol);
@@ -78,33 +77,29 @@ export class PickerComponent implements OnInit {
             this.service.updatePanelStock(ticker).subscribe(rep=>
                 {
                     console.log("saved resp:"+rep);
-                });
-            
+                });     
         }
+        this.refresh();     
     }
 
-    onReviewed(ticker:any)
+    onReviewed(ticker:ITickerOnPanel)
     {
-        var t= this.stocks.find(s=>s.symbol===ticker.symbol);
-        console.log("reviewed ticker:"+  t.symbol);
-        t.opened=true;
-        this.service.updatePanelStock(ticker);
-        console.log("after review ticker:"+  t.symbol);
-
-        this.refresh();
+        ticker.opened = true ;
+        this.openLink(ticker);
+        this.updateStatus(ticker);
      }
 
      onNext()
      {
-         var t= this.stocks[this.idx];
+         var t= this.stocks.find(t=>!t.checked&&!t.opened);
          console.log("reviewed ticker:"+t.symbol);
-         this.idx++;
+         this.selectedTicker =t ;
          this.goToLink(t);
       }
 
       onFlag()
       {
-         this.onFollow(this.stocks[this.idx-1])
+         this.onFollow(this.selectedTicker);
       }
       
     showStocks()
@@ -117,6 +112,20 @@ export class PickerComponent implements OnInit {
         console.log(heading, JSON.stringify(this.stocks));
     }
     
+
+    private updateStatus(ticker:any)
+    {
+        console.log("updateStatus ticker:"+ticker.symbol);
+         this.service.updatePanelStock(ticker);
+    }
+
+    private openLink(ticker:any)
+    {
+        ticker.opened=true;
+        var url ="https://www.google.com/search?q="+ticker.symbol+"+stock";
+        console.log(url);
+        window.open(url, "_ttblank");
+    }
 
     get dataUri(): SafeUrl {
         const jsonData = JSON.stringify(this.stocks);

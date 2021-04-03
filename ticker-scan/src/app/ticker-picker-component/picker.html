@@ -1,4 +1,6 @@
 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+rel="stylesheet">
 <h2>Click to choice</h2> <br/>  
   
 <mat-divider></mat-divider>
@@ -11,32 +13,40 @@
     </div>
 </section>
 <mat-divider  ></mat-divider>
-<b> make sure run http-server on localserver folder to</b>
+<b> make sure run nodeJd server on localserver folder to</b>
 <mat-divider  ></mat-divider>
 
- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+ <table mat-table [dataSource]="dataSource|selectedTickerPipe" class="mat-elevation-z8">
 
   
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> name. </th>
-      <td mat-cell *matCellDef="let ticker"> {{ticker.symbol}} </td>
+    <ng-container matColumnDef="Symbol">
+      <th mat-header-cell *matHeaderCellDef> Symbol. </th>
+      <td mat-cell *matCellDef="let ticker"> 
+         <div [style.color]="blue"  class="btn btn-primary" >
+             <span (click)="onReviewed(ticker)">{{ticker.symbol}}</span>
+             <span  *ngIf="ticker.opened" class="material-icons">check_circle</span>
+             <span  *ngIf="ticker.checked" class="material-icons">thumb_up</span>
+             <span  *ngIf="!ticker.checked" class="material-icons" (click)="onFollow(ticker)">thumb_down_alt</span>
+             </div>
+        </td>
     </ng-container>
   
-    <ng-container matColumnDef="reviewed">
+    <!--ng-container matColumnDef="reviewed">
       <th mat-header-cell *matHeaderCellDef> reviewed </th>
       <td mat-cell *matCellDef="let ticker"> <input
         type="checkbox"
-        [checked]="ticker.checked"
-        (change)="onReviewed(ticker)"/> </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="opened">
-      <th mat-header-cell *matHeaderCellDef> opened </th>
-      <td mat-cell *matCellDef="let ticker"> <input
-        type="checkbox"
         [checked]="ticker.opened"
+        (change)="onReviewed(ticker)"/> </td>
+    </ng-container-->
+  
+    <!--ng-container matColumnDef="opened">
+      <th mat-header-cell *matHeaderCellDef> followed </th>
+      <td mat-cell *matCellDef="let ticker"> <input
+        id="ticker.symbol"
+        type="checkbox"
+        [checked]="ticker.checked"
         (change)="onFollow(ticker)"/> </td>
-    </ng-container>
+    </ng-container-->
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let stocks; columns: displayedColumns;"></tr>

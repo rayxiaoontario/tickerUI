@@ -12,11 +12,13 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {DatePipe} from '@angular/common';
+import { SelectedTickerPipe } from './pipe/SelectedTickerPipe';
 
 @NgModule({
   declarations: [
     PickerComponent,
     AppComponent,
+    SelectedTickerPipe,
   ],
   imports: [
   BrowserModule,
@@ -30,7 +32,7 @@ import {DatePipe} from '@angular/common';
     HttpClientModule,
   ],
   providers: [
-    TickerService,HttpClient,DatePipe
+    TickerService,HttpClient,DatePipe,SelectedTickerPipe
   ],
   bootstrap: [AppComponent]
 })
