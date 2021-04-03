@@ -80,6 +80,13 @@ export class TickerService {
     return this.http.post(this._jsonURL,stocks, {headers});
   }
 
+  public updatePanelStock(stock :ITickerOnPanel ):Observable<any> 
+  {
+    const headers = { 'Content-Type': 'application/json'};
+    console.log("service posting:",stock);
+    return this.http.put(this._jsonURL,stock, {headers});
+  }
+
 
   public loadPanelStocks(): Observable<ITickerOnPanel[]> {
     return this.http.get<ITickerOnPanel[]>(this._jsonURL);

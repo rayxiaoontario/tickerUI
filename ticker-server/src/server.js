@@ -24,11 +24,14 @@ app.listen(3000,function() {
 app.get('/tickers',function(req,res) {
     var MongoClient = require('mongodb').MongoClient
     const client = new MongoClient('mongodb://127.0.0.1:27017/', {useUnifiedTopology: true});
-    client.connect().then((client)=>{
+
+     client.connect().then((client)=>{
         var db = client.db('tickerdb')
         db.collection('tickers').find().toArray(function (err, result) {
             if (err) throw err ;
+            console.log("load:"+result.length);
             res.send(JSON.stringify(result)) ;
+            client.close();
         });
     })
  })
@@ -36,13 +39,39 @@ app.get('/tickers',function(req,res) {
 
  app.post('/tickers',function(req,res) {
     const tickers = req.body ;
+    console.log("save:"+tickers.length);
     var MongoClient = require('mongodb').MongoClient
-    console.log("save:"+JSON.stringify(tickers));
     const client = new MongoClient('mongodb://127.0.0.1:27017/', {useUnifiedTopology: true});
+
     client.connect().then((client)=>{
         var db = client.db('tickerdb')
-        db.collection('tickers').deleteMany({});
-       // db.collection('tickers').insertMany(tickers);
-        res.send("done");
-        });
-    })
+        db.collection('tickers').deleteMany({}).then( (resolve, reject) => {
+            console.log("deleted:");
+          });;
+        db.collection('tickers').insertMany(tickers).then( (resolve, reject) => {
+            console.log("inserted:");
+          });
+        res.send(tickers);
+    });
+    
+    
+})
+
+app.put('/tickers',function(req,res) {
+    const ticker = req.body ;
+    console.log("save:"+JSON.stringify(ticker));
+    var MongoClient = require('mongodb').MongoClient
+    const client = new MongoClient('mongodb://127.0.0.1:27017/', {useUnifiedTopology: true});
+
+    client.connect().then((client)=>{
+        var db = client.db('tickerdb')
+        db.collection('tickers')
+        .findOneAndReplace({"symbol" : ticker.symbol}, ticker)
+        .then( (resolve, reject) => {
+            console.log("updated:");
+          });;
+        res.send(ticker);
+    });
+    
+    
+})

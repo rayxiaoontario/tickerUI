@@ -45,12 +45,14 @@ export class PickerComponent implements OnInit {
     refresh()
     {
         this.service.loadPanelStocks().subscribe(data => {
-            console.log("...loaded....");
-            this.stocks = data;
+            console.log("...loaded....",data.length);
+            this.stocks =[];
             data.forEach(d=>{ 
+                if (d!=undefined) {
                  this.stocks.push({ "symbol": d.symbol, 
                 "opened": d.opened,
                  "checked" :d.checked})
+                }
             });
             this.dataSource = this.stocks;
             this.showStocks();
@@ -73,9 +75,9 @@ export class PickerComponent implements OnInit {
             console.log("followed ticker:"+t.symbol);
             t.checked=true;
             this.service.flagTicker(ticker.symbol);
-            this.service.savePanelStocks(this.stocks).subscribe(rep=>
+            this.service.updatePanelStock(ticker).subscribe(rep=>
                 {
-                    this.refresh();
+                    console.log("saved resp:"+rep);
                 });
             
         }
@@ -86,7 +88,7 @@ export class PickerComponent implements OnInit {
         var t= this.stocks.find(s=>s.symbol===ticker.symbol);
         console.log("reviewed ticker:"+  t.symbol);
         t.opened=true;
-        this.service.savePanelStocks(this.stocks);
+        this.service.updatePanelStock(ticker);
         console.log("after review ticker:"+  t.symbol);
 
         this.refresh();
