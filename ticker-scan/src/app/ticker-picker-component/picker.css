@@ -33,3 +33,24 @@ section {
   table {
     width: 100%;
   }
+
+  .container {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
+  
+  .container .item {
+    min-height: 120px;
+    margin: 0.25em 0.5em;
+    overflow: hidden;
+  }
+
+  .grey-button {
+    background-color: #d3dbe8;
+  }
+
+  .green-button {
+    background-color: #e3fce4;
+  }

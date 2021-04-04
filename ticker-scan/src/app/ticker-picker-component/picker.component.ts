@@ -8,6 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { ITickerOnPanel } from '../models/ticker.model';
 import { HttpClientModule } from '@angular/common/http';
 import { SelectedTickerPipe } from '../pipe/SelectedTickerPipe';
+import { UnreviewedTickerPipe } from '../pipe/UnreviewedTickerPipe';
 
 @Component ({
     templateUrl: './picker.html',
@@ -47,6 +48,7 @@ export class PickerComponent implements OnInit {
     {
         console.log("refreshing..");
         this.service.loadPanelStocks().subscribe(data => {
+            console.log("refreshing.. size"+data.length) ;
             this.stocks =[];
             data.forEach(d=>{ 
                 if (d!=undefined) {
@@ -57,12 +59,14 @@ export class PickerComponent implements OnInit {
             });
             this.dataSource = this.stocks ;
         });
+
     }
 
     goToLink(ticker: ITickerOnPanel){
         this.openLink(ticker);
         ticker.opened = true;
         this.updateStatus(ticker);
+        this.selectedTicker = ticker;
     }
     
      onFollow(ticker:any)
@@ -87,6 +91,7 @@ export class PickerComponent implements OnInit {
         ticker.opened = true ;
         this.openLink(ticker);
         this.updateStatus(ticker);
+        this.selectedTicker = ticker;
      }
 
      onNext()
@@ -122,8 +127,9 @@ export class PickerComponent implements OnInit {
     private openLink(ticker:any)
     {
         ticker.opened=true;
-        var url ="https://www.google.com/search?q="+ticker.symbol+"+stock";
-        console.log(url);
+        
+        //var url ="https://www.google.com/search?q="+ticker.symbol+"+stock";
+        var url ="https://ca.finance.yahoo.com/quote/"+ticker.symbol;
         window.open(url, "_ttblank");
     }
 
