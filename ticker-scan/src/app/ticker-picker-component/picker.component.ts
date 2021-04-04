@@ -44,57 +44,14 @@ export class PickerComponent implements OnInit {
         this.refresh();
     }
 
-    refresh()
-    {
-        console.log("refreshing..");
-        this.service.loadPanelStocks().subscribe(data => {
-            console.log("refreshing.. size"+data.length) ;
-            this.stocks =[];
-            data.forEach(d=>{ 
-                if (d!=undefined) {
-                 this.stocks.push({ "symbol": d.symbol, 
-                "opened": d.opened,
-                 "checked" :d.checked})
-                }
-            });
-            this.dataSource = this.stocks ;
-        });
-
-    }
-
-    goToLink(ticker: ITickerOnPanel){
+ 
+    public goToLink(ticker: ITickerOnPanel){
         this.openLink(ticker);
-        ticker.opened = true;
-        this.updateStatus(ticker);
-        this.selectedTicker = ticker;
+        this.updateStatus(this.selectedTicker );
+        this.refresh();
     }
     
-     onFollow(ticker:any)
-    {
-        console.log("followed=>"+ticker);
-
-        if (ticker!=undefined) {
-            var t= this.stocks.find(s=>s.symbol===ticker.symbol);
-            console.log("followed ticker:"+t.symbol);
-            t.checked=true;
-            this.service.flagTicker(ticker.symbol);
-            this.service.updatePanelStock(ticker).subscribe(rep=>
-                {
-                    console.log("saved resp:"+rep);
-                });     
-        }
-        this.refresh();     
-    }
-
-    onReviewed(ticker:ITickerOnPanel)
-    {
-        ticker.opened = true ;
-        this.openLink(ticker);
-        this.updateStatus(ticker);
-        this.selectedTicker = ticker;
-     }
-
-     onNext()
+     public onNext()
      {
          var t= this.stocks.find(t=>!t.checked&&!t.opened);
          console.log("reviewed ticker:"+t.symbol);
@@ -102,17 +59,50 @@ export class PickerComponent implements OnInit {
          this.goToLink(t);
       }
 
-      onFlag()
+      public onFlag()
       {
+          console.log("==>"+this.selectedTicker);
          this.onFollow(this.selectedTicker);
       }
-      
-    showStocks()
+
+    private onFollow(ticker:ITickerOnPanel)
+    {
+        ticker.checked =true;
+        if (ticker!=undefined) {
+            var t= this.stocks.find(s=>s.symbol===ticker.symbol);
+            t.checked=true;
+            this.service.flagTicker(ticker.symbol);
+            this.service.updatePanelStock(ticker).subscribe(rep=>
+                {
+                    console.log("saved followed resp:"+JSON.stringify(rep));
+                });     
+        }
+        this.refresh();     
+    }
+   
+     
+    private refresh()
+    {
+        this.service.loadPanelStocks().subscribe(data => {
+            this.stocks =[];
+            data.forEach(d=>{ 
+                if (d!=undefined) {
+                this.stocks.push({ "symbol": d.symbol, 
+                "opened": d.opened,
+                "checked" :d.checked})
+                }
+            });
+            console.log("refreshed...");
+        });
+
+    }
+
+    private showStocks()
     {
         console.log('stocks: ', this.stocks);
     }
 
-    showStocksWithHeading( heading:string)
+    private showStocksWithHeading( heading:string)
     {
         console.log(heading, JSON.stringify(this.stocks));
     }
@@ -121,13 +111,16 @@ export class PickerComponent implements OnInit {
     private updateStatus(ticker:any)
     {
         console.log("updateStatus ticker:"+ticker.symbol);
-         this.service.updatePanelStock(ticker);
+         this.service.updatePanelStock(ticker).subscribe(rep=>
+            {
+                console.log("saved resp:"+rep);
+            });     ;
     }
 
-    private openLink(ticker:any)
+    private openLink(ticker:ITickerOnPanel)
     {
         ticker.opened=true;
-        
+        this.selectedTicker = ticker;
         //var url ="https://www.google.com/search?q="+ticker.symbol+"+stock";
         var url ="https://ca.finance.yahoo.com/quote/"+ticker.symbol;
         window.open(url, "_ttblank");

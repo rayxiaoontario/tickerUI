@@ -18,7 +18,7 @@ rel="stylesheet">
 <section>
     <div class="container">
         <div *ngFor="let ticker of stocks|selectedTickerPipe" >
-            <button mat-raised-button class="green-button" (click)="onNext()">{{ticker.symbol}}</button>
+            <button mat-raised-button class="green-button" (click)="goToLink(ticker)">{{ticker.symbol}}</button>
         </div>    
     </div>
  </section>
