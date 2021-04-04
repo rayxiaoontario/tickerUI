@@ -72,10 +72,7 @@ export class PickerComponent implements OnInit {
             var t= this.stocks.find(s=>s.symbol===ticker.symbol);
             t.checked=true;
             this.service.flagTicker(ticker.symbol);
-            this.service.updatePanelStock(ticker).subscribe(rep=>
-                {
-                    console.log("saved followed resp:"+JSON.stringify(rep));
-                });     
+            this.updateStatus(ticker);
         }
         this.refresh();     
     }
@@ -107,13 +104,27 @@ export class PickerComponent implements OnInit {
         console.log(heading, JSON.stringify(this.stocks));
     }
     
+    private playAudioSaved(){
+        let audio = new Audio();
+        audio.src = "../../assets/sounds/button-saved.mp3";
+        audio.load();
+        audio.play();
+      }
+      private playAudioClicked(){
+        let audio = new Audio();
+        audio.src = "../../assets/sounds/button-click.mp3";
+        audio.load();
+        audio.play();
+      }
+      
 
-    private updateStatus(ticker:any)
+    private updateStatus(ticker:ITickerOnPanel)
     {
         console.log("updateStatus ticker:"+ticker.symbol);
          this.service.updatePanelStock(ticker).subscribe(rep=>
             {
-                console.log("saved resp:"+rep);
+                console.log("saved resp:"+rep);               
+                this.playAudioClicked();
             });     ;
     }
 
