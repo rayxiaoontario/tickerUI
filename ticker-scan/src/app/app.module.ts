@@ -14,6 +14,7 @@ import {MatTableModule} from '@angular/material/table';
 import {DatePipe} from '@angular/common';
 import { SelectedTickerPipe } from './pipe/SelectedTickerPipe';
 import { UnreviewedTickerPipe } from './pipe/UnreviewedTickerPipe';
+import { ReviwerComponent } from './reviwer/reviwer.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { UnreviewedTickerPipe } from './pipe/UnreviewedTickerPipe';
     AppComponent,
     SelectedTickerPipe,
     UnreviewedTickerPipe,
+    ReviwerComponent,
   ],
   imports: [
   BrowserModule,
